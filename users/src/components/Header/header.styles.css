@@ -99,3 +99,47 @@
   border-radius: 10px;
   cursor: pointer;
 }
+
+.empty {
+  height: 80%;
+  width: 100%;
+  display: flex;
+  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
+  color: gray;
+}
+
+.change {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.btn {
+  height: 18px;
+  width: 18px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: auto;
+  margin-right: 4px;
+  background-color: #db4242;
+  padding-bottom: 2px;
+  box-sizing: border-box;
+  color: #fff;
+}
+
+.cart-total-items {
+  height: 15px;
+  width: 15px;
+  position: absolute;
+  background-color: #db4242;
+  top: 20px;
+  right: 15px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  color: #fff;
+}
