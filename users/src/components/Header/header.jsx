@@ -2,10 +2,23 @@ import React from "react";
 import "./header.styles.css";
 import { data } from "../../data/data";
 
-//import { IoCart } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
 
-const Header = () => {
+import { connect } from "react-redux";
+import {
+  selectCartItems,
+  selectTotalAmount,
+  totalItems,
+} from "../../redux/menu/menu.selectors";
+import { increment, decrement, remove } from "../../redux/index";
+
+const Header = ({
+  cartItems,
+  totalAmount,
+  totalItems,
+  increment,
+  decrement,
+}) => {
   const [toggleCart, setToggleCart] = React.useState(false);
   return (
     <>
@@ -16,27 +29,47 @@ const Header = () => {
           className="cart-icon"
           onClick={() => setToggleCart(!toggleCart)}
         />
+        <div className="cart-total-items">
+          <span style={{ fontSize: "11px" }}>{totalItems}</span>
+        </div>
       </div>
       {toggleCart ? (
         <div className="cart">
           <>
-            <div className="cart-items">
-              {data.map((item) => (
-                <div className="cart-item">
-                  <img
-                    className="cart-item-image"
-                    src={item.image}
-                    alt={item.name}
-                  />
-                  <div className="cart-item-details">
-                    <p>{item.name}</p>
-                    <p>{item.price}</p>
-                    <p>{item.quantity} x</p>
+            {cartItems.length === 0 ? (
+              <div className="empty">
+                <p>Your cart is empty</p>
+              </div>
+            ) : (
+              <div className="cart-items">
+                {cartItems.map((item) => (
+                  <div className="cart-item">
+                    <img
+                      className="cart-item-image"
+                      src={item.image}
+                      alt={item.name}
+                    />
+
+                    <div className="cart-item-details">
+                      <p>{item.name}</p>
+                      <p>{item.price}</p>
+                      <div className="change">
+                        <div className="btn" onClick={() => decrement(item.id)}>
+                          <p>-</p>
+                        </div>
+                        <p style={{ marginRight: "4px" }}> {item.quantity}x </p>
+                        <div className="btn" onClick={() => increment(item.id)}>
+                          <p>+</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-            <button className="checkout-btn">Checkout ( ₹1000 )</button>
+                ))}
+              </div>
+            )}
+            <button className="checkout-btn">
+              Checkout ( ₹{totalAmount} )
+            </button>
           </>
         </div>
       ) : null}
@@ -44,4 +77,20 @@ const Header = () => {
   );
 };
 
-export default Header;
+const mapStateToProps = (state) => {
+  return {
+    cartItems: selectCartItems(state),
+    totalAmount: selectTotalAmount(state),
+    totalItems: totalItems(state),
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    increment: (id) => dispatch(increment(id)),
+    decrement: (id) => dispatch(decrement(id)),
+    remove: (id) => dispatch(remove(id)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
