@@ -1,0 +1,47 @@
+.shop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.shop-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin: auto;
+  justify-content: center;
+}
+
+.shop-item {
+  height: auto;
+  width: 230px;
+  margin-right: 50px;
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 1.5rem;
+  border: 0.1rem solid rgb(232, 232, 232);
+}
+
+.shop-item:hover {
+  box-shadow: -1px -2px 9px 1px rgba(216, 202, 202, 0.7);
+  -webkit-box-shadow: -1px -2px 9px 1px rgba(216, 202, 202, 0.7);
+}
+
+.image {
+  height: 200px;
+  width: 100%;
+  border-radius: 1.5rem;
+}
+
+.add-btn {
+  height: 40px;
+  width: 100%;
+  border-radius: 0.7rem;
+  background-color: rgb(219, 32, 32);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
