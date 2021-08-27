@@ -7,7 +7,7 @@ import noodles from "../assets/images/Chilly_garlic_noodles.jpg";
 export const data = [
   {
     id: 1,
-    name: "Boneless Butter Chicken",
+    name: "Butter Chicken",
     description:
       "Our best seller Rainbow Cake is a colourful dessert with the goodness of fresh fruit pieces of pineapple, blueberry and strawberry in each delicious bite.",
     price: 250,
@@ -19,7 +19,7 @@ export const data = [
   },
   {
     id: 2,
-    name: "Chicken Triple Sichuan Rice",
+    name: "Triple Sichuan Rice",
     description:
       "Our best seller Rainbow Cake is a colourful dessert with the goodness of fresh fruit pieces of pineapple, blueberry and strawberry in each delicious bite.",
     price: 250,
@@ -31,7 +31,7 @@ export const data = [
   },
   {
     id: 3,
-    name: "Chicken Lolipop(8pcs",
+    name: "Chicken Lolipop(8pcs)",
     description:
       "Our best seller Rainbow Cake is a colourful dessert with the goodness of fresh fruit pieces of pineapple, blueberry and strawberry in each delicious bite.",
     price: 250,
