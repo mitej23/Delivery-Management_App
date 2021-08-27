@@ -16,8 +16,8 @@ const Shop = ({ items, increment, decrement, remove }) => {
           return (
             <div className="shop-item" key={item.id}>
               <img src={item.image} alt={item.name} className="image" />
-              <h3>{item.name}</h3>
-              <p>₹ {item.price}</p>
+              <h3 className="name">{item.name}</h3>
+              <p className="price">₹ {item.price}</p>
               <button className="add-btn" onClick={() => increment(item.id)}>
                 Add to cart
               </button>
