@@ -1,6 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./header.styles.css";
-import { data } from "../../data/data";
 
 import { FiShoppingCart } from "react-icons/fi";
 
@@ -52,7 +52,7 @@ const Header = ({
 
                     <div className="cart-item-details">
                       <p>{item.name}</p>
-                      <p>{item.price}</p>
+                      <p>₹{item.price}</p>
                       <div className="change">
                         <div className="btn" onClick={() => decrement(item.id)}>
                           <p>-</p>
@@ -67,9 +67,16 @@ const Header = ({
                 ))}
               </div>
             )}
-            <button className="checkout-btn">
-              Checkout ( ₹{totalAmount} )
-            </button>
+            {cartItems.length === 0 ? null : (
+              <button className="checkout-btn">
+                <Link
+                  style={{ textDecoration: "none", color: "#fff" }}
+                  to="/checkout"
+                >
+                  Checkout ( ₹{totalAmount} )
+                </Link>
+              </button>
+            )}
           </>
         </div>
       ) : null}

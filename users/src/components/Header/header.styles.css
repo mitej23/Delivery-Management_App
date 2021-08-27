@@ -126,9 +126,13 @@
   padding: auto;
   margin-right: 4px;
   background-color: #db4242;
-  padding-bottom: 2px;
+  padding-bottom: 4px;
   box-sizing: border-box;
   color: #fff;
+}
+
+.btn:hover {
+  cursor: pointer;
 }
 
 .cart-total-items {
