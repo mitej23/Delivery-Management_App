@@ -1,37 +1,43 @@
 import React from "react";
 
-const Order = ({ data }) => {
+import firebase from "firebase";
+import "firebase/firestore";
+
+const Order = ({ data, id }) => {
   const name = "John Doe";
   const [stage, setStage] = React.useState(0);
   const [OrderCompleted, setOrderCompleted] = React.useState(false);
 
+  const db = firebase.firestore();
+
   const OrderTaken = () => {
-    // const db = firebase.firestore();
+    const db = firebase.firestore();
     setStage(stage + 1);
-    // db.collection("orders")
-    //   .doc(data.order.orderId)
-    //   .update({
-    //     rider: name,
-    //     status: "accepted",
-    //   })
-    //   .then(() => {
-    //     console.log("User updated!");
-    //   });
+
+    db.collection("users")
+      .doc(id)
+      .update({
+        rider: name,
+        status: "accepted",
+      })
+      .then(() => {
+        console.log("User updated!");
+      });
     console.log("Order Taken");
   };
 
   const completeOrder = () => {
     setStage(stage + 1);
-    // const db = firebase.firestore();
+    const db = firebase.firestore();
 
-    // db.collection("orders")
-    //   .doc(data.order.orderId)
-    //   .update({
-    //     status: "completed",
-    //   })
-    //   .then(() => {
-    //     console.log("User updated!");
-    //   });
+    db.collection("users")
+      .doc(id)
+      .update({
+        status: "completed",
+      })
+      .then(() => {
+        console.log("User updated!");
+      });
     setOrderCompleted(true);
   };
 
@@ -42,13 +48,14 @@ const Order = ({ data }) => {
       <div
         style={{
           flex: 1,
-          widht: "100%",
+          width: "300px",
           border: "1px solid grey",
           borderRadius: "15px",
           marginTop: "18px",
           padding: "10px",
           alignContent: data.status === "completed" ? "center" : null,
           justifyContent: data.status === "completed" ? "center" : null,
+          position: "relative",
         }}
       >
         <div style={{ opacity: data.status === "completed" ? 0.1 : 1 }}>
@@ -80,8 +87,9 @@ const Order = ({ data }) => {
               fontSize: 20,
               fontWeight: "bold",
               position: "absolute",
-              alignSelf: "center",
               color: "green",
+              top: "37%",
+              left: "20%",
             }}
           >
             Order Completed
