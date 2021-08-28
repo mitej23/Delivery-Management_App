@@ -2,34 +2,79 @@ import React from "react";
 import "./Checkout.styles.css";
 import { useHistory } from "react-router-dom";
 
+import firebase from "firebase";
+import "firebase/firestore";
+
 import { connect } from "react-redux";
 import {
   selectCartItems,
   selectTotalAmount,
   totalItems,
 } from "../../redux/menu/menu.selectors";
-import { increment, decrement, remove } from "../../redux/index";
+import { increment, decrement, remove, clear } from "../../redux/index";
 
-const Checkout = ({
-  cartItems,
-  totalAmount,
-
-  increment,
-  decrement,
-}) => {
+const Checkout = ({ cartItems, totalAmount, increment, decrement, clear }) => {
   const [name, setName] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [mobile, setMobile] = React.useState("");
   const history = useHistory();
+  const [lat, setLat] = React.useState(0);
+  const [lng, setLng] = React.useState(0);
 
   const submit = () => {
     if (name.length === 0 || address.length === 0 || mobile.length === 0) {
       alert("Enter missing inputs");
       return;
     }
-    console.log(name, address, mobile);
+    clear();
+    const order = {
+      orderId: "#" + Math.floor(1000 + Math.random() * 9000),
+      items: cartItems.map((item) => {
+        return {
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+        };
+      }),
+      total: totalAmount,
+      date: new Date().toLocaleDateString(),
+      time: new Date().toLocaleTimeString(),
+    };
+    
+    const db = firebase.firestore();
+
+    db.collection("users")
+      .doc()
+      .set(
+        {
+          location: {
+            lat: lat,
+            lng: lng,
+          },
+          order,
+          status: "submitted",
+          rider: null,
+        },
+        { merge: true }
+      )
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.error("Error writing document: ", error);
+      });
     history.push("/");
   };
+
+  React.useEffect(() => {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      let lat = position.coords.latitude;
+      let long = position.coords.longitude;
+
+      setLat(lat);
+      setLng(long);
+    });
+  }, []);
 
   return (
     <div className="checkout-page">
@@ -115,6 +160,7 @@ const mapDispatchToProps = (dispatch) => {
     increment: (id) => dispatch(increment(id)),
     decrement: (id) => dispatch(decrement(id)),
     remove: (id) => dispatch(remove(id)),
+    clear: () => dispatch(clear()),
   };
 };
 

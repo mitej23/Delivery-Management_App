@@ -6,7 +6,14 @@ import store from "./redux/store";
 import Home from "./pages/Home/Home";
 import Checkout from "./pages/Checkout/Checkout";
 
+import firebaseConfig from "./config";
+import firebase from "firebase/app";
+
 function App() {
+  if (firebase.apps.length > 0) {
+  } else {
+    firebase.initializeApp(firebaseConfig);
+  }
   return (
     <div>
       <Provider store={store}>
