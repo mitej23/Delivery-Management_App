@@ -3,43 +3,32 @@ import "./Orders.styles.css";
 
 import Order from "../Order/Order";
 
-const Orders = ({ name }) => {
-  const [order, setOrder] = React.useState({
-    orderId: "#" + Math.floor(1000 + Math.random() * 9000),
-    items: [
-      {
-        name: "Chicken Tikka Masala",
-        price: 234,
-        quantity: 3,
-      },
-    ],
-    total: 1000,
-    date: new Date().toLocaleDateString(),
-    time: new Date().toLocaleTimeString(),
-  });
+import firebase from "firebase";
+import "firebase/firestore";
 
+const Orders = ({ name }) => {
   const [data, setData] = React.useState(null);
 
   React.useEffect(() => {
-    setData({
-      location: {
-        lat: 23424,
-        lng: 23423,
-      },
-      order: order,
-      status: "submitted",
-      rider: null,
-    });
+    const db = firebase.firestore();
+    async function getData() {
+      await db.collection("users").onSnapshot((snapshot) => {
+        setData(snapshot);
+      });
+    }
+    getData();
   }, []);
 
+  console.log(data);
+
   return (
-    <div>
+    <div className="order-page">
       <h1>Orders</h1>
-      <h2>{name}</h2>
+      <h3 className="welcome">Welcome! {name}</h3>
       {data != null ? (
         <>
-          <Order data={data} />
-          <Order data={data} />{" "}
+          {data &&
+            data.docs.map((doc) => <Order key={doc.id} data={doc.data()} id={doc.id}/>)}
         </>
       ) : null}
     </div>
