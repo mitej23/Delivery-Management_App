@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import "./App.css";
 import Orders from "./components/Orders/Orders";
 
+import firebaseConfig from "./config";
+import firebase from "firebase/app";
+
 function App() {
   const [name, setName] = useState("");
   const [logedIn, setLogedIn] = useState(false);
@@ -12,6 +15,11 @@ function App() {
     }
     setLogedIn(true);
   };
+
+  if (firebase.apps.length > 0) {
+  } else {
+    firebase.initializeApp(firebaseConfig);
+  }
 
   return (
     <div className="App">
