@@ -3,12 +3,11 @@ import React from "react";
 import firebase from "firebase";
 import "firebase/firestore";
 
-const Order = ({ data, id }) => {
-  const name = "John Doe";
+const Order = ({ data, id, name, map, setMap, setOrderLocation }) => {
   const [stage, setStage] = React.useState(0);
   const [OrderCompleted, setOrderCompleted] = React.useState(false);
 
-  const db = firebase.firestore();
+  //const db = firebase.firestore();
 
   const OrderTaken = () => {
     const db = firebase.firestore();
@@ -27,6 +26,9 @@ const Order = ({ data, id }) => {
   };
 
   const completeOrder = () => {
+    if (data.rider != name) {
+      return;
+    }
     setStage(stage + 1);
     const db = firebase.firestore();
 
@@ -41,7 +43,10 @@ const Order = ({ data, id }) => {
     setOrderCompleted(true);
   };
 
-  console.log(data);
+  const trackOrder = () => {
+    setMap(!map);
+    setOrderLocation(data.location);
+  };
 
   return (
     <>
@@ -69,16 +74,26 @@ const Order = ({ data, id }) => {
             {data.order.items.reduce((acc, item) => acc + item.quantity, 0)}
           </p>
           {data.status === "submitted" ? (
-            <button title="Take Order" onClick={OrderTaken}>
-              Take Order
-            </button>
+            <>
+              <button title="Take Order" onClick={OrderTaken}>
+                Take Order
+              </button>
+            </>
           ) : data.status === "accepted" ? (
-            <button
-              title={`Order Taken By : ${name}`}
-              onClick={completeOrder}
-            >{`Order Taken By : ${name}`}</button>
+            <>
+              {data.rider === name ? (
+                <button onClick={trackOrder}>Track Order</button>
+              ) : (
+                <button
+                  onClick={completeOrder}
+                  disabled={data.rider !== name ? true : false}
+                >{`Order Taken By : ${data.rider}`}</button>
+              )}
+            </>
           ) : (
-            <button onClick={completeOrder}>Order Completed</button>
+            <>
+              <button onClick={completeOrder}>Order Completed</button>
+            </>
           )}
         </div>
         {data.status === "completed" && (
