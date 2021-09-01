@@ -32,8 +32,7 @@ def handle_message(data,name):
     print(clients)
     print(data)
     print('recieved from ',name)
-    sessionId = clients['Mitej madan']
-    #sessionId = clients[name]
+    sessionId = clients[name]
     emit("new-location", data , room = sessionId)
     print("send to : ", sessionId)
     
