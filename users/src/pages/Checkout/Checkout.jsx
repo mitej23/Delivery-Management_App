@@ -18,8 +18,8 @@ const Checkout = ({ cartItems, totalAmount, increment, decrement, clear }) => {
   const [address, setAddress] = React.useState("");
   const [mobile, setMobile] = React.useState("");
   const history = useHistory();
-  const [lat, setLat] = React.useState(0);
-  const [lng, setLng] = React.useState(0);
+  const [lat, setLat] = React.useState(null);
+  const [lng, setLng] = React.useState(null);
 
   const submit = () => {
     if (name.length === 0 || address.length === 0 || mobile.length === 0) {
@@ -28,6 +28,7 @@ const Checkout = ({ cartItems, totalAmount, increment, decrement, clear }) => {
     }
     clear();
     const order = {
+      name: name,
       orderId: "#" + Math.floor(1000 + Math.random() * 9000),
       items: cartItems.map((item) => {
         return {
@@ -40,7 +41,7 @@ const Checkout = ({ cartItems, totalAmount, increment, decrement, clear }) => {
       date: new Date().toLocaleDateString(),
       time: new Date().toLocaleTimeString(),
     };
-    
+
     const db = firebase.firestore();
 
     db.collection("users")
@@ -63,7 +64,7 @@ const Checkout = ({ cartItems, totalAmount, increment, decrement, clear }) => {
       .catch((error) => {
         console.error("Error writing document: ", error);
       });
-    history.push("/");
+    history.push("/tracking", { id: order.orderId, lat: lat, lng: lng, name });
   };
 
   React.useEffect(() => {
