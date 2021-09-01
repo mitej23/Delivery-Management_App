@@ -8,6 +8,7 @@ import Checkout from "./pages/Checkout/Checkout";
 
 import firebaseConfig from "./config";
 import firebase from "firebase/app";
+import MapTracking from "./pages/Map_tracking/MapTracking";
 
 function App() {
   if (firebase.apps.length > 0) {
@@ -21,6 +22,7 @@ function App() {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/checkout" component={Checkout} />
+            <Route path="/tracking" component={MapTracking} />
           </Switch>
         </Router>
       </Provider>
