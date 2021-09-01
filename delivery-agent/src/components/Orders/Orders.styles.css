@@ -1,0 +1,13 @@
+.order-page {
+  margin: 30px 50px;
+}
+
+.welcome {
+  margin-top: 15px;
+}
+
+.modal-exit {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
