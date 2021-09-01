@@ -19,7 +19,7 @@ const geolocateControlStyle = {
   top: 10,
 };
 
-const MapTracking = ({ name }) => {
+const MapTracking = () => {
   const location = useLocation();
 
   const accessToken =
@@ -38,9 +38,20 @@ const MapTracking = ({ name }) => {
   const [driverLat, setDriverLat] = useState(null);
   const [driverLng, setDriverLng] = useState(null);
 
+  const [persistName, setPersistName] = useState(location.state.name);
+
+  console.log(persistName);
+
   React.useEffect(() => {
+    if (persistName) {
+      privateSocket.emit("join", persistName);
+      console.log(persistName);
+    } else {
+      const savedName = localStorage.getItem("name");
+      setPersistName(savedName);
+    }
     socket.on("connect", () => {
-      privateSocket.emit("join", "Mitej madan");
+      privateSocket.emit("join", persistName);
     });
 
     privateSocket.on("new-location", (message) => {
@@ -54,19 +65,20 @@ const MapTracking = ({ name }) => {
       socket.disconnect();
     };
   }, []);
+
   //console.log(location.state);
 
-  const goToMyLocation = () => {
-    setViewport({
-      ...viewport,
-      longitude: 72.846595,
-      latitude: 19.236988,
-      zoom: 14,
-      transitionDuration: 5000,
-      transitionInterpolator: new FlyToInterpolator(),
-      // transitionEasing: easeCubic,
-    });
-  };
+  // const goToMyLocation = () => {
+  //   setViewport({
+  //     ...viewport,
+  //     longitude: 72.846595,
+  //     latitude: 19.236988,
+  //     zoom: 14,
+  //     transitionDuration: 5000,
+  //     transitionInterpolator: new FlyToInterpolator(),
+  //     // transitionEasing: easeCubic,
+  //   });
+  // };
 
   return (
     <div
