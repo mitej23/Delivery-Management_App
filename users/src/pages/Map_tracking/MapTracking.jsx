@@ -8,14 +8,18 @@ import ReactMapGl, {
   FlyToInterpolator,
 } from "react-map-gl";
 
-import useInterval from "../../hooks/useInterval";
+import io from "socket.io-client";
+
+let endPoint = "http://127.0.0.1:5000/";
+let socket = io.connect(`${endPoint}`);
+var privateSocket = io(`${endPoint}join`);
 
 const geolocateControlStyle = {
   right: 10,
   top: 10,
 };
 
-const MapTracking = () => {
+const MapTracking = ({ name }) => {
   const location = useLocation();
 
   const accessToken =
@@ -24,14 +28,32 @@ const MapTracking = () => {
   const [viewport, setViewport] = useState({
     latitude: location.state.lat,
     longitude: location.state.lng,
-    width: "70vw",
-    height: "70vh",
+    width: "80vw",
+    height: "80vh",
     zoom: 12,
   });
 
   const [myLat, setMyLat] = useState(19.236988);
   const [myLng, setMyLng] = useState(72.846595);
+  const [driverLat, setDriverLat] = useState(null);
+  const [driverLng, setDriverLng] = useState(null);
 
+  React.useEffect(() => {
+    socket.on("connect", () => {
+      privateSocket.emit("join", "Mitej madan");
+    });
+
+    privateSocket.on("new-location", (message) => {
+      console.log("Location received");
+      console.log(message);
+      setDriverLat(message.lat);
+      setDriverLng(message.lng);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
   //console.log(location.state);
 
   const goToMyLocation = () => {
@@ -46,16 +68,10 @@ const MapTracking = () => {
     });
   };
 
-  useInterval(() => {
-    // Your custom logic here
-    setMyLat(myLat + 0.0001);
-    setMyLng(myLng + 0.0001);
-    console.log(myLat, myLng);
-    //console.log("test");
-  }, 1000);
-
   return (
-    <div>
+    <div
+      style={{ display: "flex", justifyContent: "center", marginTop: "50px" }}
+    >
       <ReactMapGl
         {...viewport}
         mapboxApiAccessToken={accessToken}
@@ -68,16 +84,45 @@ const MapTracking = () => {
           trackUserLocation={true}
           auto
         />
-        <Marker
+        {/* <Marker
           latitude={myLat}
           longitude={myLng}
           offsetLeft={-1}
           offsetTop={-1}
         >
           <div>You are here</div>
-        </Marker>
+        </Marker> */}
+        {driverLat !== null && driverLng !== null ? (
+          <Marker
+            latitude={driverLat}
+            longitude={driverLng}
+            offsetLeft={-10}
+            offsetTop={-34}
+          >
+            <div>
+              <svg
+                width="20"
+                height="34"
+                viewBox="0 0 10 17"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <ellipse cx="5" cy="5.00009" rx="5" ry="5.00009" fill="black" />
+                <circle cx="4.99998" cy="5.00001" r="1.66667" fill="white" />
+                <line
+                  x1="5.125"
+                  y1="9.99942"
+                  x2="5.16779"
+                  y2="16.9992"
+                  stroke="black"
+                  stroke-width="0.25"
+                />
+              </svg>
+            </div>
+          </Marker>
+        ) : null}
       </ReactMapGl>
-      <button onClick={goToMyLocation}>New York City</button>
+      {/* <button onClick={goToMyLocation}>New York City</button> */}
     </div>
   );
 };
